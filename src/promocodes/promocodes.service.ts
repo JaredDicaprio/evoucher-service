@@ -15,6 +15,14 @@ export class PromocodesService {
     this.promocodesRepository.insert(data);
   }
 
+  async find(data) {
+    return this.promocodesRepository.find(data);
+  }
+
+  async update(data) {
+    return this.promocodesRepository.save(data);
+  }
+
   // verify provided promocodes
   async verify(data) {
     const codes = await this.promocodesRepository.findByIds(data);

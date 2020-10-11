@@ -9,8 +9,11 @@ export class PromoCode {
   qrImage: string;
 
   @Column()
-  evoucherId: number;
+  evoucherId: string;
 
   @Column({ default: true })
   hasUsed: boolean;
+
+  @Column({ default: '' })
+  phone: string;
 }

@@ -26,9 +26,6 @@ export class Evoucher {
   @Column()
   quantity: number;
 
-  @Column({ type: 'enum', enum: ['self', 'gift'], default: 'self' })
-  buyType: string;
-
   @Column()
   buyLimit: number;
 

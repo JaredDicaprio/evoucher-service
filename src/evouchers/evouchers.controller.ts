@@ -47,11 +47,11 @@ export class EvouchersController {
   @MessagePattern('create')
   async create(data: Evoucher): Promise<void> {
     try {
-      await this.evoucherService.create(data);
+      const created = await this.evoucherService.create(data);
 
       this.client
         .send('generate', {
-          evoucherId: data.id,
+          evoucherId: created.id,
           qty: data.quantity,
         })
         .subscribe(promoCodes => {
@@ -99,8 +99,29 @@ export class EvouchersController {
 
   @MessagePattern('buy')
   async buy(data) {
-    const { evoucherId } = data;
+    const { evoucherId, phone } = data;
+    const res = await this.evoucherService.checkBuy(data);
 
-    const eVoucher = this.evoucherService.findOne(evoucherId);
+    if (res.status !== 'ok') {
+      return res;
+    }
+
+    const promoCodes = await this.promocodesService.find({
+      evoucherId,
+    });
+
+    await this.promocodesService.update(
+      promoCodes.map(({ code }) => ({ code, phone })),
+    );
+
+    return {
+      promoCodes,
+    };
+  }
+
+  @MessagePattern('history')
+  async history(data) {
+    // find by phone
+    return this.promocodesService.find(data);
   }
 }
